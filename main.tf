@@ -14,7 +14,7 @@ provider "aws" {
 
 #s3 bucket
 resource "aws_s3_bucket" "intigno_terraform_bucket" {
-  bucket = "intigno_terraform_bucket"
+  bucket = "intigno-terraform-bucket"
 }
 
 #IAM Role for Lambda
