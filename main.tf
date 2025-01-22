@@ -18,7 +18,7 @@ resource "random_string" "suffix" {
 }
 #s3 bucket
 resource "aws_s3_bucket" "intigno_terraform_bucket" {
-  bucket = "intigno-terraform-bucket-${random_string.suffix.result}"
+  bucket = "intigno-terraform-bucket"
 }
 
 #IAM Role for Lambda
@@ -39,7 +39,7 @@ resource "aws_iam_role" "intigno_terraform_lambda_role" {
 #IAM Policy
 resource "aws_iam_role_policy_attachment" "intigno_lambda_policy" {
   role       = aws_iam_role.intigno_terraform_lambda_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 }
 
 #Lambda Function
