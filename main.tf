@@ -42,7 +42,7 @@ resource "aws_iam_role_policy_attachment" "intigno_lambda_policy" {
 resource "aws_lambda_function" "intigno_example_lambda" {
   function_name = "intigno_terraform_lambda"
   runtime       = "python3.9"
-  role          = aws_iam_role.intigno_terraform_lambda_role
+  role          = aws_iam_role.intigno_terraform_lambda_role.arn
   handler       = "lambda_function.lambda_handler"
   filename      = "${path.module}/package.zip"
 
