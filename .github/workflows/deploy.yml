@@ -32,6 +32,20 @@ jobs:
           rm -rf package
         shell: bash
 
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Run Linting
+        run: flake8 lambda_function.py # Lint for python best practices
+
+      - name: Run tests
+        run: |
+          ls -R
+          pytest --verbose
+
       # Install Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
