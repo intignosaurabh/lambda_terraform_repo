@@ -21,6 +21,16 @@ resource "aws_s3_bucket" "intigno_terraform_bucket" {
   bucket = "intigno-terraform-bucket"
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "intigno-terraform-state-bucket"    # Replace with your unique S3 bucket name
+    key            = "terraform/state/terraform.tfstate" # Path to the state file inside the S3 bucket
+    region         = "ap-southeast-2"                    # The AWS region you are working in
+    dynamodb_table = "terraform-lock-table"              # Replace with the DynamoDB table used for locking
+    encrypt        = true                                # Encrypt the state file in S3
+  }
+}
+
 #IAM Role for Lambda
 resource "aws_iam_role" "intigno_terraform_lambda_role" {
   name = "intigno_lambda_execution_role_new"
