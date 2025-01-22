@@ -5,6 +5,7 @@ import requests
 def lambda_handler(event, context):
     # Example of using requests
     print("This is my first CICD pipeline demo!")
+    print("Added tf state in DynamoDB!")
     response = requests.get("https://api.github.com")
     return {
         'statusCode': 200,
