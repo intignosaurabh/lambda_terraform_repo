@@ -1,4 +1,4 @@
-name: Deploy to AWS
+name: Deploy Lambda with Terraform
 
 on:
   push:
@@ -10,22 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Checkout the code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
+      # Set up Python for dependency installation
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      # Install dependencies and create deployment package
+      - name: Build Lambda deployment package
+        run: |
+          mkdir -p package
+          pip install requests -t package/
+          cp lambda_function.py package/
+          cd package
+          zip -r ../package.zip .
+          cd ..
+          rm -rf package
+        shell: bash
+
+      # Install Terraform
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
 
-      - name: Terraform Init
+      # Terraform Init
+      - name: Initialize Terraform
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan -out=plan.tfplan
+      # Terraform Plan
+      - name: Plan Terraform
+        run: terraform plan
 
-      - name: Terraform Apply
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -auto-approve plan.tfplan
+      # Terraform Apply
+      - name: Apply Terraform
+        run: terraform apply -auto-approve

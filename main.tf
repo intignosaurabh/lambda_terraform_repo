@@ -38,19 +38,6 @@ resource "aws_iam_role_policy_attachment" "intigno_lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
 
-resource "null_resource" "build_lambda_package" {
-  provisioner "local-exec" {
-    command = <<EOT
-        mkdir -p ${path.module}/package
-        pip install requests -t ${path.module}/package/
-        cp ${path.module}/lambda_function.py ${path.module}/package/
-        cd ${path.module}/package
-        zip -r ../package.zip .
-        cd ${path.module}
-        rm -rf ${path.module}/package
-    EOT
-  }
-}
 #Lambda Function
 resource "aws_lambda_function" "intigno_example_lambda" {
   function_name = "intigno_terraform_lambda"
@@ -58,8 +45,6 @@ resource "aws_lambda_function" "intigno_example_lambda" {
   role          = aws_iam_role.intigno_terraform_lambda_role
   handler       = "lambda_function.lambda_handler"
   filename      = "${path.module}/package.zip"
-
-  depends_on = [null_resource.build_lambda_package]
 
   source_code_hash = filebase64sha256("${path.module}/package.zip")
   environment {
