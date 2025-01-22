@@ -12,9 +12,13 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
 #s3 bucket
 resource "aws_s3_bucket" "intigno_terraform_bucket" {
-  bucket = "intigno-terraform-bucket"
+  bucket = "intigno-terraform-bucket-${random_string.suffix.result}"
 }
 
 #IAM Role for Lambda
